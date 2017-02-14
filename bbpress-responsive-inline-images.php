@@ -84,8 +84,8 @@ class Plugin
     }
     
     /**
-    * Returns the instance of this class.
-    */
+     * Returns the instance of this class.
+     */
     public static function instance()
     {
         if (!self::$instance) {
@@ -95,8 +95,8 @@ class Plugin
             self::$instance->boostrap();
             
             /**
-            * Run after the plugin has been loaded.
-            */
+             * Run after the plugin has been loaded.
+             */
             do_action('bbpress-responsive-inline-images_loaded');
         }
         
@@ -157,8 +157,8 @@ class Plugin
 }
 
 /**
-* @return Plugin $instance returns an instance of the plugin
-*/
+ * @return Plugin $instance returns an instance of the plugin
+ */
 function instance()
 {
     return Plugin::instance();
