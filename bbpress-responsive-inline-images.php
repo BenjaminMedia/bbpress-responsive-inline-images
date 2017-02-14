@@ -4,7 +4,7 @@
 * Version: 0.1.0
 * Plugin URI: https://github.com/BenjaminMedia/bbpress-responsive-inline-images
 * Description: This plugin gives you the ability to select a post in bbPress as the best answer
-* Author: Bonnier - Michael Sørensen
+* Author: Bonnier - Michael Sørensen & Frederik Rabøl
 * License: MIT
 */
 

@@ -19,6 +19,11 @@
     {
       "name": "Michael Sørensen",
       "email": "michael.sorensen@bonnier.dk"
+    },
+    {
+      "name": "Frederik Rabøl",
+      "email": "frederik.raboel@bonnier.dk",
+      "homepage" : "http://rabol.co"
     }
   ],
   "support": {
@@ -27,7 +32,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Bonnier\\WP\\BestAnswer\\": "src/Bonnier/WP/BestAnswer/"
+      "Bonnier\\ResponsiveInlineImages\\": "/"
     }
   },
   "require": {
