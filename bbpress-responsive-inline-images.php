@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Bonnier bbPress responsive inline images
- * Version: 0.1.0
- * Plugin URI: https://github.com/BenjaminMedia/bbpress-responsive-inline-images
- * Description: This plugin gives you the ability to select a post in bbPress as the best answer
- * Author: Bonnier - Michael Sørensen
- * License: MIT
- */
+* Plugin Name: Bonnier bbPress responsive inline images
+* Version: 0.1.0
+* Plugin URI: https://github.com/BenjaminMedia/bbpress-responsive-inline-images
+* Description: This plugin gives you the ability to select a post in bbPress as the best answer
+* Author: Bonnier - Michael Sørensen
+* License: MIT
+*/
 
 namespace Bonnier\ResponsiveInlineImages;
 
@@ -26,45 +26,45 @@ spl_autoload_register(function ($className) {
 class Plugin
 {
     /**
-     * Text domain for translators
-     */
+    * Text domain for translators
+    */
     const TEXT_DOMAIN = 'bp-bbprii';
 
     const CLASS_DIR = '';
 
     /**
-     * @var object Instance of this class.
-     */
+    * @var object Instance of this class.
+    */
     private static $instance;
 
     public $settings;
 
     /**
-     * @var string Filename of this class.
-     */
+    * @var string Filename of this class.
+    */
     public $file;
 
     /**
-     * @var string Basename of this class.
-     */
+    * @var string Basename of this class.
+    */
     public $basename;
 
     /**
-     * @var string Plugins directory for this plugin.
-     */
+    * @var string Plugins directory for this plugin.
+    */
     public $plugin_dir;
 
     /**
-     * @var string Plugins url for this plugin.
-     */
+    * @var string Plugins url for this plugin.
+    */
     public $plugin_url;
 
     const IMG_REGEX = '/(<img[^>]+\>)/i';
     const IMG_SRC_REGEX = '/src="?([^ ]+\/.*?)["> ]/i';
 
     /**
-     * Do not load this more than once.
-     */
+    * Do not load this more than once.
+    */
     private function __construct()
     {
         // Set plugin file variables
@@ -115,11 +115,11 @@ class Plugin
         $splitHtml = $this->split_html_on_image($content);
         
         $args = [
-        'order' => 'ASC',
-        'post_mime_type' => 'image',
-        'post_parent' => $reply_id,
-        'post_status' => null,
-        'post_type' => 'attachment',
+            'order' => 'ASC',
+            'post_mime_type' => 'image',
+            'post_parent' => $reply_id,
+            'post_status' => null,
+            'post_type' => 'attachment',
         ];
         
         $attachments = get_children($args);
