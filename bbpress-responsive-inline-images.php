@@ -72,19 +72,20 @@ class Plugin
         $this->basename = plugin_basename($this->file);
         $this->plugin_dir = plugin_dir_path($this->file);
         $this->plugin_url = plugin_dir_url($this->file);
-
+        
         // Load textdomain
         load_plugin_textdomain(self::TEXT_DOMAIN, false, dirname($this->basename) . '/languages');
     }
-
+    
     private function boostrap()
     {
         add_filter('bbp_get_reply_content', [$this, 'modify_reply_content_with_link'], 10, 2);
+        add_filter('bbp_get_topic_content', [$this, 'modify_reply_content_with_link'], 10, 2);
     }
-
+    
     /**
-     * Returns the instance of this class.
-     */
+    * Returns the instance of this class.
+    */
     public static function instance()
     {
         if (!self::$instance) {
@@ -92,66 +93,72 @@ class Plugin
             global $bbpress_responsive_inline_images;
             $bbpress_responsive_inline_images = self::$instance;
             self::$instance->boostrap();
-
+            
             /**
-             * Run after the plugin has been loaded.
-             */
+            * Run after the plugin has been loaded.
+            */
             do_action('bbpress-responsive-inline-images_loaded');
         }
-
+        
         return self::$instance;
     }
-
+    
     private function split_html_on_image($html) {
         if(is_array($html)) {
             return array_map([$this, 'split_html_on_image'], $html);
         }
         return preg_split(static::IMG_REGEX, $html, -1, PREG_SPLIT_DELIM_CAPTURE);
     }
-
+    
     public function modify_reply_content_with_link($content, $reply_id)
     {
         $splitHtml = $this->split_html_on_image($content);
-
+        
         $args = [
-            'order' => 'ASC',
-            'post_mime_type' => 'image',
-            'post_parent' => $reply_id,
-            'post_status' => null,
-            'post_type' => 'attachment',
+        'order' => 'ASC',
+        'post_mime_type' => 'image',
+        'post_parent' => $reply_id,
+        'post_status' => null,
+        'post_type' => 'attachment',
         ];
-
+        
         $attachments = get_children($args);
-
+        
         foreach($attachments as $attachment) {
-
+            
             $attachmentUrlFullSize = wp_get_attachment_url($attachment->ID);
             $attachmentSrcLarge = wp_get_attachment_url($attachment->ID, 'large');
             $attachment_url = wp_get_attachment_image_url($attachment->ID, 'medium');
             $attachment_srcset = wp_get_attachment_image_srcset($attachment->ID, 'medium');
             $attachment_size = wp_get_attachment_image_sizes($attachment->ID, 'medium');
+            $attachmentUrlFullSizeDimensions = wp_get_attachment_metadata($attachment->ID);
+            
+            $imageData = '<a href="'.$attachmentUrlFullSize.'" class="lightbox" data-dimensions="'.
+            $attachmentUrlFullSizeDimensions['width'].'x'.$attachmentUrlFullSizeDimensions['height'].'">
+            <img src="'.$attachment_url.'" srcset="'.$attachment_srcset.'" sizes="'.$attachment_size
+            .'" /></a>';
 
-            $imageData = '<a href="'.$attachmentUrlFullSize.'" class="lightbox"><img src="'.$attachment_url.'" srcset="'.$attachment_srcset.'" sizes="'.$attachment_size.'" /></a>';
-
+            $filteredImage = apply_filters( 'bbp-rii-image', $imageData, $attachment->ID);
+            
             foreach ($splitHtml as $html) {
                 $matches = [];
                 preg_match(static::IMG_SRC_REGEX, $html, $matches);
                 if(count($matches) > 1) {
                     $imgSrc = $matches[1];
                     if ($imgSrc === $attachmentSrcLarge) {
-                        $content = str_replace($html, $imageData, $content);
+                        $content = str_replace($html, $filteredImage, $content);
                     }
                 }
             }
         }
-
+        
         return $content;
     }
 }
 
 /**
- * @return Plugin $instance returns an instance of the plugin
- */
+* @return Plugin $instance returns an instance of the plugin
+*/
 function instance()
 {
     return Plugin::instance();
